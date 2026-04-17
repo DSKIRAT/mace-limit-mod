@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "macelimit",
+  "version": "1.0.0",
+  "name": "Mace Limit Mod",
+  "description": "Limits the number of Maces craftable on the server to 1.",
+  "authors": [
+    "You"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "com.macelimit.mod.MaceLimitMod"
+    ]
+  },
+  "mixins": [
+    "macelimit.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
