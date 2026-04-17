@@ -47,31 +47,3 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
     withSourcesJar()
 }
-Also update your .github/workflows/build.yml — replace the Setup Gradle and Build steps to pin Gradle to version 8.8:
-yamlname: Build Mod
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Java 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '8.8'
-      - name: Build
-        run: gradle build
-      - name: Upload JAR
-        uses: actions/upload-artifact@v4
-        with:
-          name: mace-limit-mod
-          path: build/libs/mace-limit-mod-*.jar
