@@ -1,0 +1,86 @@
+plugins {
+    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = '1.0.0'
+group = 'com.macelimit'
+
+base {
+    archivesName = 'mace-limit-mod'
+}
+
+repositories {
+    maven { url "https://maven.fabricmc.net/" }
+}
+
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        "macelimit" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+fabricApi {
+    configureDataGeneration()
+}
+
+dependencies {
+    // Minecraft + Fabric Loader
+    minecraft "com.mojang:minecraft:1.21.11"
+    mappings "net.fabricmc:yarn:1.21.11+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.16.10"
+
+    // Fabric API
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.119.3+1.21.11"
+}
+
+processResources {
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+def targetJavaVersion = 21
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        it.options.release = targetJavaVersion
+    }
+}
+
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchains {
+            compiler {
+                languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+            }
+        }
+    }
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
+            from components.java
+        }
+    }
+    repositories {}
+}
